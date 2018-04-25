@@ -25,15 +25,12 @@ public class LoginAcceptanceTest extends AcceptanceTest {
     @Test
     public void login() throws Exception {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm();
 
         String userId = "javajigi";
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("userId", userId);
-        params.add("password", "test");
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+        htmlFormDataBuilder.addParameter("userId", userId);
+        htmlFormDataBuilder.addParameter("password", "test");
+        HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
         ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
@@ -42,15 +39,12 @@ public class LoginAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void login_fail() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm();
 
         String userId = "javajigi";
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("userId", userId);
-        params.add("password", "1111");
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+        htmlFormDataBuilder.addParameter("userId", userId);
+        htmlFormDataBuilder.addParameter("password", "111");
+        HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
         ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
